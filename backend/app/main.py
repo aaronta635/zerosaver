@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from app.api import api_router
 from app.middleware import add_middlewares
 from app.database import db_engine
-from app.models import Base
+from app.models.base import Base
 
 app = FastAPI()
 add_middlewares(app)

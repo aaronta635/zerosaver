@@ -1,11 +1,11 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from sqlalchemy.sql import func
-from app.models import Base
+from app.models.base import Base
 
 class User(Base):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, unique=True, index=True)
+    id = Column(Integer, primary_key=True)
+    email = Column(String, unique=True)
     name = Column(String)
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
