@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 
 // Simple partner data for now
 const PARTNERS = [
@@ -23,9 +23,57 @@ export default function PartnerHub({ onCreateDeal }: PartnerHubProps) {
     quantity: "1",     // Changed from 1 to "1"
     pickupAddress: "",
   })
+  
+  const [imageUploading, setImageUploading] = useState(false)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const vendor = PARTNERS.find((p) => p.id === form.vendorId)
   const descLimit = 240
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file')
+      return
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image must be smaller than 5MB')
+      return
+    }
+
+    setImageUploading(true)
+    
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+      const response = await fetch(`${API_BASE}/api/deals/upload-image/`, {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setForm({ ...form, imageUrl: `${API_BASE}${data.image_url}` })
+        setImagePreview(`${API_BASE}${data.image_url}`)
+      } else {
+        const error = await response.json()
+        alert(`Upload failed: ${error.detail}`)
+      }
+    } catch (error) {
+      console.error('Upload error:', error)
+      alert('Upload failed. Please try again.')
+    } finally {
+      setImageUploading(false)
+    }
+  }
 
   const handleSubmit = () => {
     if (!vendor?.approved) return alert("Your partner account is pending approval.")
@@ -143,14 +191,56 @@ export default function PartnerHub({ onCreateDeal }: PartnerHubProps) {
 
             <label className="col-span-2">
               <span className="text-xs text-muted-foreground">
-                Image URL <span className="text-muted-foreground/60">(optional)</span>
+                Deal Image <span className="text-muted-foreground/60">(optional)</span>
               </span>
-              <input
-                value={form.imageUrl}
-                onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                placeholder="https://..."
-                className="w-full border border-border rounded-xl px-3 py-2 bg-background"
-              />
+              
+              {/* Image Preview */}
+              {(imagePreview || form.imageUrl) && (
+                <div className="mb-3">
+                  <img 
+                    src={imagePreview || form.imageUrl} 
+                    alt="Deal preview" 
+                    className="w-full h-32 object-cover rounded-lg border"
+                  />
+                </div>
+              )}
+              
+              {/* Upload Button */}
+              <div className="flex items-center gap-3">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={imageUploading}
+                  className="px-4 py-2 border border-border rounded-lg hover:bg-accent transition-colors disabled:opacity-50"
+                >
+                  {imageUploading ? "📤 Uploading..." : "📷 Upload Image"}
+                </button>
+                
+                {(imagePreview || form.imageUrl) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setForm({ ...form, imageUrl: "" })
+                      setImagePreview(null)
+                      if (fileInputRef.current) fileInputRef.current.value = ""
+                    }}
+                    className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  >
+                    ✕ Remove
+                  </button>
+                )}
+              </div>
+              
+              <p className="text-xs text-muted-foreground/60 mt-1">
+                Upload JPG, PNG, or GIF (max 5MB)
+              </p>
             </label>
 
             <label>

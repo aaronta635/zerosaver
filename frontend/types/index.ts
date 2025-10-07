@@ -11,7 +11,7 @@ export interface Deal {
   diet: string[]
   originalPrice: number
   price: number
-  qty: number
+  quantity: number
   minOrderQty: number
   distanceKm: number
   pickupAddress: string

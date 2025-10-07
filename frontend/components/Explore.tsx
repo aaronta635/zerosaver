@@ -12,43 +12,49 @@ export default function Explore({ deals, filters, setFilters, onReserve }: Explo
 
   return (
     <section className="space-y-6">
-      <div className="bg-gradient-to-r from-primary/20 to-accent/20 rounded-2xl p-6 text-center border border-primary/20">
-        <h1 className="text-3xl md:text-4xl font-serif font-bold text-balance mb-3">
-          🎉 Who knew saving the planet could be this delicious?
-        </h1>
-        <p className="text-lg text-muted-foreground text-balance max-w-2xl mx-auto">
-          Starting with a chuckle... Who would've thought the ticket to saving our planet was hidden in our pantries!
-          Sounds a bit nuts, doesn't it? Let's rescue some amazing food together! 🌍✨
+      <div className="eco-gradient rounded-2xl p-8 md:p-12 text-center relative overflow-hidden">
+        <div className="absolute top-4 right-4 leaf-float">
+          <span className="text-4xl">🌱</span>
+        </div>
+        <div className="absolute bottom-4 left-4 leaf-float" style={{ animationDelay: "1s" }}>
+          <span className="text-3xl">🍃</span>
+        </div>
+        <h1 className="text-3xl md:text-5xl font-bold text-emerald-900 mb-4">Rescue Food, Save Our Planet</h1>
+        <p className="text-lg md:text-xl text-emerald-800 mb-6 max-w-2xl mx-auto">
+          Every meal you rescue helps reduce food waste and fights climate change. Join the movement to make every bite
+          count for our environment.
         </p>
+        <div className="flex flex-wrap justify-center gap-4 text-sm">
+          <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-emerald-200">
+            <span className="font-semibold text-emerald-700">🌍 Reduce CO₂ emissions</span>
+          </div>
+          <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-emerald-200">
+            <span className="font-semibold text-emerald-700">💚 Save up to 70%</span>
+          </div>
+          <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-emerald-200">
+            <span className="font-semibold text-emerald-700">🌱 Support local businesses</span>
+          </div>
+        </div>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-        <h2 className="text-lg font-serif font-bold mb-4 text-center">🔍 Find Your Perfect Food Match!</h2>
+      <div className="bg-card rounded-xl p-6 border">
+        <h3 className="font-semibold mb-4">Find Your Perfect Deal</h3>
         <div className="grid md:grid-cols-4 gap-4">
           <input
             type="text"
-            placeholder="🔍 What's making your tummy rumble?"
+            placeholder="Search deals..."
             value={filters.q}
             onChange={(e) => setFilters({ ...filters, q: e.target.value })}
-            className="border border-border rounded-xl px-4 py-3 bg-background focus:ring-2 focus:ring-primary/20 transition-all"
+            className="border border-border rounded-lg px-4 py-2 bg-input"
           />
           <select
             value={filters.cat}
             onChange={(e) => setFilters({ ...filters, cat: e.target.value })}
-            className="border border-border rounded-xl px-4 py-3 bg-background focus:ring-2 focus:ring-primary/20 transition-all"
+            className="border border-border rounded-lg px-4 py-2 bg-input"
           >
-            <option value="All">🍽️ All Yummy Categories</option>
+            <option value="All">All Categories</option>
             {CATEGORIES.map((c) => (
               <option key={c} value={c}>
-                {c === "Restaurant"
-                  ? "🍽️ "
-                  : c === "Bakery"
-                    ? "🥐 "
-                    : c === "Café"
-                      ? "☕ "
-                      : c === "Grocer"
-                        ? "🥬 "
-                        : "🏪 "}
                 {c}
               </option>
             ))}
@@ -56,113 +62,120 @@ export default function Explore({ deals, filters, setFilters, onReserve }: Explo
           <select
             value={filters.diet}
             onChange={(e) => setFilters({ ...filters, diet: e.target.value })}
-            className="border border-border rounded-xl px-4 py-3 bg-background focus:ring-2 focus:ring-primary/20 transition-all"
+            className="border border-border rounded-lg px-4 py-2 bg-input"
           >
-            <option value="All">🌱 All Diet Friends</option>
+            <option value="All">All Diets</option>
             {DIETS.map((d) => (
               <option key={d} value={d}>
-                {d === "Vegan" ? "🌱 " : d === "Vegetarian" ? "🥕 " : d === "Gluten-free" ? "🌾 " : "🥗 "}
                 {d}
               </option>
             ))}
           </select>
-          <div className="flex items-center gap-3 bg-muted/30 rounded-xl px-4 py-3">
-            <span className="text-sm text-muted-foreground whitespace-nowrap">🚶 Max distance:</span>
+          <div className="flex items-center gap-2">
+            <label className="text-sm font-medium">Within:</label>
             <input
               type="range"
               min="1"
-              max="20"
+              max="50"
               value={filters.maxKm}
               onChange={(e) => setFilters({ ...filters, maxKm: Number.parseInt(e.target.value) })}
-              className="flex-1 accent-primary"
+              className="flex-1"
             />
-            <span className="text-sm font-medium text-primary">{filters.maxKm}km</span>
+            <span className="text-sm font-medium">{filters.maxKm}km</span>
           </div>
         </div>
       </div>
 
       {deals.length === 0 && (
-        <div className="p-8 bg-card rounded-2xl border border-border text-center">
-          <div className="text-6xl mb-4">🕵️‍♀️</div>
-          <h3 className="text-xl font-serif font-bold mb-2">Oops! No tasty treasures found</h3>
-          <p className="text-muted-foreground">
-            Don't worry, let's try tweaking those filters to uncover some delicious deals! 🎯
-          </p>
+        <div className="text-center py-12">
+          <div className="text-6xl mb-4">🔍</div>
+          <h3 className="text-xl font-semibold mb-2">No deals found</h3>
+          <p className="text-muted-foreground">Try adjusting your filters to see more options</p>
         </div>
       )}
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {deals.map((d) => (
-          <div
-            key={d.id}
-            className="bg-card border border-border rounded-2xl p-5 flex flex-col hover:shadow-lg hover:scale-[1.02] transition-all duration-200"
-          >
+        {deals.map((deal) => {
+          const timeLeft = minutesLeft(deal.expiresAt || deal.ready_time || new Date().toISOString())
+          const discount = Math.round(((deal.originalPrice - deal.price) / deal.originalPrice) * 100)
+          const itemCO2Saved = Math.round(0.4 * 2.5) // 0.4kg food * 2.5 CO2e factor
+
+          return (
             <div
-              className="h-36 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 mb-4 flex items-center justify-center text-4xl"
-              style={
-                d.imageUrl
-                  ? { backgroundImage: `url(${d.imageUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
-                  : {}
-              }
+              key={deal.id}
+              className="bg-card rounded-xl border overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
             >
-              {!d.imageUrl &&
-                (d.category === "Restaurant"
-                  ? "🍽️"
-                  : d.category === "Bakery"
-                    ? "🥐"
-                    : d.category === "Café"
-                      ? "☕"
-                      : d.category === "Grocer"
-                        ? "🥬"
-                        : "🏪")}
-            </div>
-            <div className="flex items-start justify-between gap-2 mb-3">
-              <div>
-                <div className="font-serif font-bold text-balance text-lg">{d.title}</div>
-                <div className="text-sm text-muted-foreground">
-                  {d.vendor} • {d.category} • {d.distanceKm}km away
+              <div className="aspect-video bg-muted flex items-center justify-center relative">
+                {deal.imageUrl || deal.image_url ? (
+                  <img
+                    src={deal.imageUrl || deal.image_url || "/placeholder.svg"}
+                    alt={deal.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="text-muted-foreground text-4xl">🍽️</div>
+                )}
+                <div className="absolute top-2 left-2 bg-emerald-600 text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                  <span>🌱</span>
+                  <span>{itemCO2Saved}kg CO₂</span>
                 </div>
               </div>
-              <div className="text-right">
-                <div className="text-muted-foreground line-through text-xs">{currency(d.originalPrice)}</div>
-                <div className="text-xl font-bold text-green-700">{currency(d.price)}</div>
+
+              <div className="p-4">
+                <div className="flex items-start justify-between mb-2">
+                  <div>
+                    <h3 className="font-semibold text-foreground">{deal.title}</h3>
+                    <p className="text-sm text-muted-foreground">{deal.vendor || deal.restaurant_name}</p>
+                  </div>
+                  <div className="bg-primary text-primary-foreground px-2 py-1 rounded-full text-xs font-bold">
+                    {discount}% OFF
+                  </div>
+                </div>
+
+                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{deal.description}</p>
+
+                <div className="flex items-center gap-2 mb-3">
+                  {deal.diet?.map((d) => (
+                    <span
+                      key={d}
+                      className="bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full text-xs font-medium"
+                    >
+                      {d}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-bold text-emerald-700">{currency(deal.price)}</span>
+                    <span className="text-sm text-muted-foreground line-through">{currency(deal.originalPrice)}</span>
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    {deal.quantity} left • {deal.distanceKm}km away
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between mb-4">
+                  <div className="text-sm text-emerald-700 font-medium">
+                    ⏰ {timeLeft > 60 ? `${Math.floor(timeLeft / 60)}h ${timeLeft % 60}m` : `${timeLeft}m`} left!
+                  </div>
+                  <div className="flex items-center gap-1 text-sm">
+                    <span className="text-yellow-500">★</span>
+                    <span className="font-medium">{deal.rating || 4.5}</span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => onReserve(deal)}
+                  disabled={deal.quantity < 1}
+                  className="w-full bg-emerald-600 text-white py-2 rounded-lg font-medium hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {deal.quantity < 1 ? "Sold Out" : "🌱 Rescue Now"}
+                </button>
               </div>
             </div>
-            <div className="flex items-center gap-2 mb-4 text-xs flex-wrap">
-              <span className="px-3 py-1 bg-green-600 text-white rounded-full font-medium">{d.diet[0] || "Mixed"}</span>
-              {d.tags.slice(0, 2).map((t) => (
-                <span key={t} className="px-3 py-1 bg-muted rounded-full text-muted-foreground">
-                  {t}
-                </span>
-              ))}
-              <span className="ml-auto px-3 py-1 rounded-full bg-green-600 text-white font-bold animate-pulse">
-                ⏰ {minutesLeft(d.expiresAt)}m left!
-              </span>
-            </div>
-            <div className="flex items-center gap-2 mt-auto">
-              <button
-                disabled={d.qty === 0}
-                onClick={() => onReserve(d, d.minOrderQty || 1)}
-                className={`flex-1 px-4 py-3 rounded-xl font-bold transition-all ${
-                  d.qty === 0
-                    ? "opacity-50 cursor-not-allowed bg-muted text-muted-foreground"
-                    : "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-                }`}
-              >
-                {d.qty === 0 ? "😢 All Gone!" : "🎉 Rescue Me!"}
-              </button>
-              <button
-                className="px-4 py-3 rounded-xl border border-border hover:bg-accent hover:border-accent transition-all"
-                onClick={() => setSelected(d)}
-              >
-                👀
-              </button>
-            </div>
-            <div className="text-xs text-muted-foreground mt-3 text-center bg-muted/30 rounded-lg py-2">
-              📦 Stock: {d.qty} • 🛒 Min order: {d.minOrderQty}
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
       {selected && (
@@ -174,9 +187,9 @@ export default function Explore({ deals, filters, setFilters, onReserve }: Explo
             <div
               className="h-40 rounded-t-2xl bg-gradient-to-br from-emerald-100 to-emerald-200"
               style={
-                selected.imageUrl
+                selected.imageUrl || selected.image_url
                   ? {
-                      backgroundImage: `url(${selected.imageUrl})`,
+                      backgroundImage: `url(${selected.imageUrl || selected.image_url})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                     }
@@ -188,7 +201,7 @@ export default function Explore({ deals, filters, setFilters, onReserve }: Explo
                 <div>
                   <div className="text-lg font-bold">{selected.title}</div>
                   <div className="text-sm text-neutral-500">
-                    {selected.vendor} • {selected.category}
+                    {selected.vendor || selected.restaurant_name} • {selected.category}
                   </div>
                 </div>
                 <div className="text-right">
@@ -198,17 +211,17 @@ export default function Explore({ deals, filters, setFilters, onReserve }: Explo
               </div>
               {selected.description && <p className="mt-2 text-sm">{selected.description}</p>}
               <div className="flex items-center gap-2 mt-2 text-xs text-neutral-600">
-                {(selected.diet[0] || "").length > 0 && (
+                {(selected.diet?.[0] || "").length > 0 && (
                   <span className="px-2 py-0.5 bg-neutral-100 rounded-full">{selected.diet[0]}</span>
                 )}
                 {selected.coldChain && <span className="px-2 py-0.5 bg-neutral-100 rounded-full">Cold chain</span>}
                 {selected.b2b && <span className="px-2 py-0.5 bg-neutral-100 rounded-full">B2B</span>}
                 <span className="ml-auto px-2 py-0.5 rounded-full bg-green-600 text-white">
-                  {minutesLeft(selected.expiresAt)}m left
+                  {minutesLeft(selected.expiresAt || selected.ready_time || new Date().toISOString())}m left
                 </span>
               </div>
               <div className="text-xs text-neutral-500 mt-2">
-                Stock: {selected.qty} · Min order: {selected.minOrderQty}
+                Stock: {selected.quantity} · Min order: {selected.minOrderQty || 1}
               </div>
               <div className="flex gap-2 mt-4">
                 <button

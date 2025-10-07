@@ -11,12 +11,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #86efac;
+  background: #059669;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #4ade80;
+  background: #047857;
 }
 
 /* Smooth transitions */
@@ -28,7 +28,7 @@
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
-  outline: 2px solid #86efac;
+  outline: 2px solid #059669;
   outline-offset: 2px;
 }
 
@@ -40,76 +40,76 @@ select:focus-visible {
 }
 
 :root {
-  /* Updated to soft mint green theme inspired by mobile interface */
-  --background: #f0f9f4;
-  --foreground: #1f2937;
-  --card: #ffffff;
-  --card-foreground: #1f2937;
+  /* Updated to professional emerald green theme from design brief */
+  --background: #ffffff;
+  --foreground: #475569;
+  --card: #f1f5f9;
+  --card-foreground: #475569;
   --popover: #ffffff;
-  --popover-foreground: #1f2937;
-  --primary: #86efac;
-  --primary-foreground: #1f2937;
-  --secondary: #bbf7d0;
-  --secondary-foreground: #1f2937;
-  --muted: #f0f9f4;
-  --muted-foreground: #6b7280;
-  --accent: #4ade80;
+  --popover-foreground: #475569;
+  --primary: #059669;
+  --primary-foreground: #ffffff;
+  --secondary: #10b981;
+  --secondary-foreground: #ffffff;
+  --muted: #f1f5f9;
+  --muted-foreground: #475569;
+  --accent: #10b981;
   --accent-foreground: #ffffff;
-  --destructive: #ef4444;
+  --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  --border: #d1fae5;
+  --border: #e5e7eb;
   --input: #ffffff;
-  --ring: #86efac;
-  --chart-1: #86efac;
-  --chart-2: #4ade80;
-  --chart-3: #bbf7d0;
-  --chart-4: #22c55e;
-  --chart-5: #16a34a;
-  --radius: 1rem;
-  --sidebar: #f0f9f4;
-  --sidebar-foreground: #1f2937;
-  --sidebar-primary: #86efac;
-  --sidebar-primary-foreground: #1f2937;
-  --sidebar-accent: #4ade80;
+  --ring: rgba(9, 150, 105, 0.5);
+  --chart-1: #059669;
+  --chart-2: #10b981;
+  --chart-3: #4ade80;
+  --chart-4: #bbf7d0;
+  --chart-5: #d1fae5;
+  --radius: 0.5rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #475569;
+  --sidebar-primary: #10b981;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #059669;
   --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #d1fae5;
-  --sidebar-ring: #86efac;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: rgba(9, 150, 105, 0.5);
 }
 
 .dark {
-  /* Updated dark mode with green theme */
+  /* Updated dark mode with emerald green theme */
   --background: #0f172a;
   --foreground: #f1f5f9;
   --card: #1e293b;
   --card-foreground: #f1f5f9;
   --popover: #1e293b;
   --popover-foreground: #f1f5f9;
-  --primary: #86efac;
+  --primary: #10b981;
   --primary-foreground: #0f172a;
-  --secondary: #22c55e;
-  --secondary-foreground: #f1f5f9;
+  --secondary: #059669;
+  --secondary-foreground: #ffffff;
   --muted: #334155;
   --muted-foreground: #94a3b8;
-  --accent: #4ade80;
+  --accent: #10b981;
   --accent-foreground: #0f172a;
-  --destructive: #ef4444;
+  --destructive: #dc2626;
   --destructive-foreground: #ffffff;
   --border: #334155;
   --input: #1e293b;
-  --ring: #86efac;
-  --chart-1: #86efac;
-  --chart-2: #4ade80;
-  --chart-3: #22c55e;
-  --chart-4: #16a34a;
-  --chart-5: #15803d;
+  --ring: rgba(16, 185, 129, 0.5);
+  --chart-1: #10b981;
+  --chart-2: #059669;
+  --chart-3: #047857;
+  --chart-4: #065f46;
+  --chart-5: #064e3b;
   --sidebar: #1e293b;
   --sidebar-foreground: #f1f5f9;
-  --sidebar-primary: #86efac;
+  --sidebar-primary: #10b981;
   --sidebar-primary-foreground: #0f172a;
-  --sidebar-accent: #4ade80;
-  --sidebar-accent-foreground: #0f172a;
+  --sidebar-accent: #059669;
+  --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #334155;
-  --sidebar-ring: #86efac;
+  --sidebar-ring: rgba(16, 185, 129, 0.5);
 }
 
 @theme inline {
@@ -150,9 +150,9 @@ select:focus-visible {
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* Added Google Fonts for playful typography */
-  --font-sans: "Source Sans Pro", system-ui, sans-serif;
-  --font-serif: "Playfair Display", Georgia, serif;
+  /* Updated to professional fonts from design brief */
+  --font-sans: "Geist", system-ui, sans-serif;
+  --font-serif: "Manrope", Georgia, serif;
 }
 
 @layer base {
@@ -163,7 +163,7 @@ select:focus-visible {
     @apply bg-background text-foreground font-sans;
   }
 
-  /* Added playful heading styles */
+  /* Updated heading styles for professional look */
   h1,
   h2,
   h3 {
@@ -171,5 +171,57 @@ select:focus-visible {
   }
 }
 
-/* Added Google Fonts import */
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+Pro:wght@300;400;600&display=swap");
+/* Leaf animation for environmental elements */
+@keyframes leafFloat {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+}
+
+.leaf-float {
+  animation: leafFloat 3s ease-in-out infinite;
+}
+
+/* Environmental gradient backgrounds */
+.eco-gradient {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 50%, #6ee7b7 100%);
+}
+
+.eco-gradient-dark {
+  background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);
+}
+
+/* CO2 tracking pulse animation */
+@keyframes co2Pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+.co2-pulse {
+  animation: co2Pulse 2s ease-in-out infinite;
+}
+
+/* Environmental impact cards */
+.impact-card {
+  background: linear-gradient(145deg, #ecfdf5, #d1fae5);
+  border: 1px solid #a7f3d0;
+}
+
+.dark .impact-card {
+  background: linear-gradient(145deg, #064e3b, #065f46);
+  border: 1px solid #047857;
+}
+
+/* Updated Google Fonts import for professional typography */
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300;400;600;700&family=Manrope:wght@400;600;700&display=swap");
