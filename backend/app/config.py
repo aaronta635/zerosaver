@@ -15,8 +15,8 @@ class Settings(BaseSettings):
     # CORS settings
     cors_origins: list = [
         "http://localhost:3000",
-        "https://zerosaver.vercel.app",
-        "https://zerosaver-git-main-aaronta635.vercel.app"
+        "https://zerosaver-idfi-d6u5phsq4-aaronta635s-projects.vercel.app",
+        "https://zerosaver-idfi.vercel.app"
     ]
 
     class Config:
