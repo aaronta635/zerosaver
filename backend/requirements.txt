@@ -1,12 +1,15 @@
 fastapi
-uvicorn
+uvicorn[standard]
 sqlalchemy
 pydantic
+pydantic-settings
 pytest
 httpx
 pandas
 numpy
 scikit-learn
-python-jose
+python-jose[cryptography]
 passlib[bcrypt]
 email-validator
+psycopg2-binary
+python-multipart
