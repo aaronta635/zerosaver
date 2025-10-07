@@ -270,3 +270,6 @@ This project is licensed under the MIT License.
 ---
 
 **Built with ❤️ for reducing food waste and helping communities save money.**
+
+---
+*Last updated: October 2024*
