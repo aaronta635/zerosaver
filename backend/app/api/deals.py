@@ -60,29 +60,34 @@ def get_deals(db: Session = Depends(get_db)):
 
 @router.post("/", response_model = DealResponse)
 def create_deal(deal: DealCreate, db: Session = Depends(get_db)):
+    try:
+        deal_id = generate_unique_id()
 
-    deal_id = generate_unique_id()
+        # Parse datetime - handle both with and without timezone
+        if deal.ready_time.endswith('Z'):
+            ready_time = datetime.fromisoformat(deal.ready_time.replace('Z', '+00:00'))
+        else:
+            ready_time = datetime.fromisoformat(deal.ready_time)
+        
+        db_deal = Deal(
+            id = deal_id,
+            title = deal.title,
+            restaurant_name = deal.restaurant_name,
+            description=deal.description,
+            price=deal.price,
+            quantity=deal.quantity,
+            pickup_address=deal.pickup_address,
+            image_url=deal.image_url,
+            ready_time=ready_time,
+            is_active=True
+        )
 
-    ready_time = datetime.fromisoformat(deal.ready_time)
-    
-    db_deal = Deal(
-        id = deal_id,
-        title = deal.title,
-        restaurant_name = deal.restaurant_name,
-        description=deal.description,
-        price=deal.price,
-        quantity=deal.quantity,
-        pickup_address=deal.pickup_address,
-        image_url=deal.image_url,
-        ready_time=ready_time,  # You might need to parse this if it's a string
-        is_active=True
-    )
+        db.add(db_deal)
+        db.commit()
+        db.refresh(db_deal)
 
-    db.add(db_deal)
-
-    db.commit()
-
-    db.refresh(db_deal)
-
-    print("Done!")
-    return db_deal
+        return db_deal
+        
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to create deal: {str(e)}")

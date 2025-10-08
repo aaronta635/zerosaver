@@ -1,20 +1,22 @@
 from sqlalchemy.orm import Session
 from app.crud.user import create_user, get_user_by_email, authenticate_user
-from app.schemas.auth import UserCreate, UserLogin, UserResponse, TokenResponse, RoleType
+from app.schemas.auth import UserLogin, UserResponse, TokenResponse, RoleType
+from app.schemas.user import UserCreate
 from app.models.user import User, UserRole
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from fastapi import HTTPException, status
+from app.config import settings
 import secrets
 
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # JWT settings
-SECRET_KEY = "your-secret-key-here"  # Change this in production
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+SECRET_KEY = settings.secret_key
+ALGORITHM = settings.algorithm
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.access_token_expire_minutes
 
 class AuthService:
     def __init__(self, db: Session):
@@ -45,20 +47,8 @@ class AuthService:
                 detail="Email already registered"
             )
         
-        # Create new user
-        hashed_password = self.get_password_hash(user_data.password)
-        db_user = User(
-            email=user_data.email,
-            name=user_data.name,
-            hashed_password=hashed_password,
-            role=UserRole(user_data.role.value),
-            is_active=True
-        )
-        
-        self.db.add(db_user)
-        self.db.commit()
-        self.db.refresh(db_user)
-        
+        # Create new user using CRUD function
+        db_user = create_user(self.db, user_data)
         return UserResponse.from_orm(db_user)
 
     async def login_user(self, login_data: UserLogin) -> TokenResponse:

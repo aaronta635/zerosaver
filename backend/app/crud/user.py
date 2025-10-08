@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models.user import User
+from app.models.user import User, UserRole
 from app.schemas.user import UserCreate, UserUpdate
 from passlib.context import CryptContext
 
@@ -22,7 +22,12 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 def create_user(db: Session, user: UserCreate):
     hashed_password = get_password_hash(user.password)
-    db_user = User(email=user.email, name=user.name, hashed_password=hashed_password)
+    db_user = User(
+        email=user.email, 
+        name=user.name, 
+        hashed_password=hashed_password,
+        role=user.role.value
+    )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)

@@ -20,7 +20,7 @@ class DealResponse(BaseModel):
     price: int
     quantity: int
     pickup_address: str
-    image_url: str
+    image_url: str | None
     is_active: bool
     ready_time: datetime
     created_at: datetime

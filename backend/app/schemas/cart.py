@@ -24,7 +24,7 @@ class CartReturn(BaseModel):
 class CartUpdateReturn(BaseModel):
     id: int
     customer_id: int
-    product_id: int
+    product_id: str
     quantity: int
     updated_at: datetime
     

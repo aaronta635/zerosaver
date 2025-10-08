@@ -1,5 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field, validator
 from typing import Optional
+from datetime import datetime
+from app.schemas.auth import RoleType
 
 class UserBase(BaseModel):
     email: EmailStr
@@ -7,6 +9,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str = Field(..., min_length=8)
+    role: RoleType = RoleType.CUSTOMER
 
     @validator('password')
     def validate_password(cls, v):
@@ -33,7 +36,9 @@ class UserUpdate(BaseModel):
 
 class UserResponse(UserBase):
     id: int
+    role: RoleType
     is_active: bool
+    created_at: datetime
 
     class Config:
         orm_mode = True

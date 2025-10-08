@@ -45,7 +45,7 @@ async def update_cart(
 
 @router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_cart_item(
-    product_id: int,
+    product_id: str,
     cart_service: CartService = Depends(get_cart_service),
     customer_id: int = 1,  # Simplified for now
 ):
