@@ -40,14 +40,28 @@ export default function RegisterPage() {
       return
     }
 
-    if (form.password.length < 6) {
-      setError('Password must be at least 6 characters long')
+    if (form.password.length < 8) {
+      setError('Password must be at least 8 characters long')
+      setLoading(false)
+      return
+    }
+
+    // Check for uppercase letter
+    if (!/[A-Z]/.test(form.password)) {
+      setError('Password must contain at least one uppercase letter')
+      setLoading(false)
+      return
+    }
+
+    // Check for digit
+    if (!/\d/.test(form.password)) {
+      setError('Password must contain at least one digit')
       setLoading(false)
       return
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -186,9 +200,9 @@ export default function RegisterPage() {
               value={form.password}
               onChange={handleInputChange}
               required
-              minLength={6}
+              minLength={8}
               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-              placeholder="Enter your password (min 6 characters)"
+              placeholder="Enter your password (min 8 characters, uppercase, digit)"
             />
           </div>
 
