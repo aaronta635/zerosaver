@@ -54,6 +54,7 @@ async def get_deal_image(filename: str):
     return FileResponse(file_path)
 
 @router.get('/')
+@router.get('')  # Handle both /api/deals/ and /api/deals
 def get_deals(db: Session = Depends(get_db)):
     deals = db.query(Deal).all()
     return deals
