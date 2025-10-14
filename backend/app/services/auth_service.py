@@ -9,6 +9,7 @@ from passlib.context import CryptContext
 from fastapi import HTTPException, status
 from app.config import settings
 import secrets
+import hashlib
 
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -23,9 +24,15 @@ class AuthService:
         self.db = db
 
     def verify_password(self, plain_password: str, hashed_password: str) -> bool:
+        # Handle bcrypt's 72-byte limitation by pre-hashing long passwords
+        if len(plain_password.encode('utf-8')) > 72:
+            plain_password = hashlib.sha256(plain_password.encode('utf-8')).hexdigest()
         return pwd_context.verify(plain_password, hashed_password)
 
     def get_password_hash(self, password: str) -> str:
+        # Handle bcrypt's 72-byte limitation by pre-hashing long passwords
+        if len(password.encode('utf-8')) > 72:
+            password = hashlib.sha256(password.encode('utf-8')).hexdigest()
         return pwd_context.hash(password)
 
     def create_access_token(self, data: dict, expires_delta: timedelta = None):

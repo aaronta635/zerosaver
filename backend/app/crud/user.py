@@ -2,13 +2,22 @@ from sqlalchemy.orm import Session
 from app.models.user import User, UserRole
 from app.schemas.user import UserCreate, UserUpdate
 from passlib.context import CryptContext
+import hashlib
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def get_password_hash(password: str) -> str:
+    # Handle bcrypt's 72-byte limitation by pre-hashing long passwords
+    if len(password.encode('utf-8')) > 72:
+        # Use SHA256 to reduce password length while maintaining security
+        password = hashlib.sha256(password.encode('utf-8')).hexdigest()
     return pwd_context.hash(password)
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
+    # Handle bcrypt's 72-byte limitation by pre-hashing long passwords
+    if len(plain_password.encode('utf-8')) > 72:
+        # Use SHA256 to reduce password length while maintaining security
+        plain_password = hashlib.sha256(plain_password.encode('utf-8')).hexdigest()
     return pwd_context.verify(plain_password, hashed_password)
 
 def get_user(db: Session, user_id: int):
