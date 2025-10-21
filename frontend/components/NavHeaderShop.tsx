@@ -8,6 +8,7 @@ export default function NavHeaderShop() {
     { href: "/", label: "🏠 Home" },
     { href: "/shop", label: "🏪 My Shop" },
     { href: "/shop/partner", label: "📝 Create Deal" },
+    { href: "/shop/analytics", label: "📊 Analytics" },
   ]
 
   return (

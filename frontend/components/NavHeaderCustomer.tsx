@@ -7,6 +7,7 @@ export default function NavHeader() {
   const navItems = [
     { href: "/", label: "🏠 Home" },
     { href: "/customer", label: "🍎 Explore Goodies" },
+    { href: "/customer/analytics", label: "📊 My Impact" },
   ]
 
   return (
