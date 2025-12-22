@@ -99,6 +99,8 @@ def get_cart_service(
     crud_customer=Depends(get_crud_customer),
     crud_order=Depends(get_crud_order),
     crud_payment=Depends(get_crud_payment_details),
+    crud_order_item=Depends(get_crud_order_item),
+    crud_vendor=Depends(get_crud_vendor),
     paystack=Depends(get_paystack),
 ) -> CartService:
     return CartService(
@@ -109,6 +111,8 @@ def get_cart_service(
         crud_customer=crud_customer,
         crud_order=crud_order,
         crud_payment=crud_payment,
+        crud_order_item=crud_order_item,
+        crud_vendor=crud_vendor,
         paystack=paystack,
     )
 

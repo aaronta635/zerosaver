@@ -10,6 +10,7 @@ class OrderCreate(BaseModel):
     customer_id: Optional[int] = None
     status: OrderStatusEnum = OrderStatusEnum.PROCESSING
     total_amount: Optional[float] = None
+    pickup_code: Optional[str] = None
 
 
 class OrderReturn(ReturnBaseModel):
@@ -17,6 +18,7 @@ class OrderReturn(ReturnBaseModel):
     status: OrderStatusEnum
     total_amount: Optional[float] = None
     order_date: Optional[datetime] = None
+    pickup_code: Optional[str] = None
     customer: CustomerReturn
 
 
@@ -58,6 +60,8 @@ class CheckoutCreate(BaseModel):
 
 class PaymentVerified(BaseModel):
     payment_verified: bool = True
+    order_id: Optional[int] = None
+    pickup_code: Optional[str] = None
 
 
 class OrderItemStatus(BaseModel):

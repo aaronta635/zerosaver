@@ -8,6 +8,7 @@ from models import AuthUser
 from schemas import (
     VendorCreate,
     VendorReturn,
+    VendorUpdate,
 )
 
 from services.vendor_service import VendorService
@@ -24,5 +25,16 @@ async def create_vendor(
 ):
 
     return await vendor_service.create_vendor(
+        data_obj=data_obj, current_user=current_user
+    )
+
+
+@router.put("/", response_model=VendorReturn)
+async def update_vendor(
+    data_obj: VendorUpdate,
+    current_user: AuthUser = Depends(get_current_auth_user),
+    vendor_service: VendorService = Depends(get_vendor_service),
+):
+    return await vendor_service.update_vendor(
         data_obj=data_obj, current_user=current_user
     )

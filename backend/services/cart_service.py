@@ -10,6 +10,8 @@ from crud import (
     CRUDCustomer,
     CRUDOrder,
     CRUDPaymentDetails,
+    CRUDOrderItem,
+    CRUDVendor,
 )
 from models import AuthUser
 from schemas.base import PaymentMethodEnum, StatusEnum
@@ -21,6 +23,8 @@ from schemas import (
     PaymentDetailsCreate,
     PaymentVerified,
 )
+from utils.random_id import generate_pickup_code
+from utils.postmark_client import send_postmark_email
 
 
 class CartService:
@@ -34,6 +38,8 @@ class CartService:
         crud_customer: CRUDCustomer,
         crud_order: CRUDOrder,
         crud_payment: CRUDPaymentDetails,
+        crud_order_item: CRUDOrderItem,
+        crud_vendor: CRUDVendor,
         paystack: PaystackClient,
     ):
         self.crud_auth_user = crud_auth_user
@@ -42,6 +48,8 @@ class CartService:
         self.crud_customer = crud_customer
         self.crud_order = crud_order
         self.crud_payment = crud_payment
+        self.crud_order_item = crud_order_item
+        self.crud_vendor = crud_vendor
         self.paystack = paystack
         self.queue_connection = queue_connection
 
@@ -103,7 +111,9 @@ class CartService:
         customer = self.crud_customer.get(id=current_user.role_id)
 
         order_data_obj = OrderCreate(
-            customer_id=current_user.role_id, total_amount=cart_summary["total_amount"]
+            customer_id=current_user.role_id,
+            total_amount=cart_summary["total_amount"],
+            pickup_code=generate_pickup_code(),
         )
         products_and_quantity_in_cart: List[Tuple] = [
             (products.product, products.quantity)
@@ -127,12 +137,16 @@ class CartService:
             or data_obj.payment_details.payment_method
             == PaymentMethodEnum.BANK_TRANSFER
         ):
-            return await self.paystack.initialize_payment(
+            paystack_rsp = await self.paystack.initialize_payment(
                 amount=int(cart_summary["total_amount"]),
                 email=current_user.email,
                 channel=data_obj.payment_details.payment_method,
                 **paystack_metadata,
             )
+            # surface order tracking details along with the payment init response
+            paystack_rsp["order_id"] = order.id
+            paystack_rsp["pickup_code"] = order.pickup_code
+            return paystack_rsp
 
         payment_details_obj = PaymentDetailsCreate(
             order_id=order.id,
@@ -156,6 +170,8 @@ class CartService:
 
         payment_rsp = await self.paystack.verify_payment(payment_ref=payment_ref)
         order_id = payment_rsp["metadata"]["order_id"]
+        pickup_code = payment_rsp["metadata"].get("pickup_code")
+        pay_method = payment_rsp.get("channel")
 
         match payment_rsp["status"]:
             case StatusEnum.ABADONED:
@@ -184,4 +200,36 @@ class CartService:
         await self.queue_connection.enqueue_job("update_stock_after_checkout", order_id)
         await self.crud_payment.create(payment_details_obj)
 
-        return PaymentVerified
+        order = self.crud_order.get(order_id)
+        order_items = self.crud_order_item.get_by_order_id(order_id=order_id) or []
+        vendor = None
+        if order_items:
+            vendor = self.crud_vendor.get(order_items[0].vendor_id)
+
+        seller_name = (
+            f"{vendor.first_name} {vendor.last_name}" if vendor else "the store"
+        )
+        order_time = vendor.order_time if vendor else None
+        total_price = order.total_amount if order else payment_details_obj.amount
+
+        text_body = (
+            f"Hi,\n\nYour order has been placed for {seller_name}.\n"
+            f"Pickup code: {pickup_code}\n"
+            f"Amount: {total_price}\n"
+            f"Payment method: {pay_method}\n"
+        )
+        if order_time:
+            text_body += f"Please head to the store by: {order_time}\n"
+        text_body += "\nThank you for shopping with us."
+
+        customer_email = payment_rsp.get("customer", {}).get("email")
+        if customer_email:
+            await send_postmark_email(
+                to_email=customer_email,
+                subject="Order confirmed",
+                text_body=text_body,
+            )
+
+        return PaymentVerified(
+            payment_verified=True, order_id=order_id, pickup_code=pickup_code
+        )

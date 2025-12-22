@@ -15,7 +15,7 @@ from models.auth_user import AuthUser
 from schemas.base import Roles
 from .schema import Tokens, TokenData, RefreshTokenCreate
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 BLACKLISTED_TOKEN = []
 

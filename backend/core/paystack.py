@@ -23,6 +23,7 @@ class PaystackClient:
             "customer_first_name": customer.first_name,
             "customer_last_name": customer.last_name,
             "order_id": order.id,
+            "pickup_code": order.pickup_code,
             "custom_fields": [
                 {
                     "display_name": "Order ID",

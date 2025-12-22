@@ -8,6 +8,7 @@ import sqlalchemy.orm
 from core.db import get_db
 from crud.base import CRUDBase
 from models import Order, OrderItem, ShippingDetails, PaymentDetails
+from schemas.base import StatusEnum
 from schemas import (
     OrderCreate,
     PaymentDetailsCreate,
@@ -47,6 +48,9 @@ class CRUDOrderItem(CRUDBase[OrderItem, OrderItemsCreate, OrderItemsCreate]):
             .options(
                 sqlalchemy.orm.joinedload(self.model.order).joinedload(Order.customer)
             )
+            .join(Order, self.model.order)
+            .join(PaymentDetails, Order.payment_details)
+            .filter(PaymentDetails.status == StatusEnum.SUCCESS)
             .all()
         )
         return query if query else None
@@ -60,6 +64,9 @@ class CRUDOrderItem(CRUDBase[OrderItem, OrderItemsCreate, OrderItemsCreate]):
             self._db.query(self.model)
             .filter(self.model.vendor_id == vendor_id)
             .filter(self.model.created_timestamp >= query_date)
+            .join(Order, self.model.order)
+            .join(PaymentDetails, Order.payment_details)
+            .filter(PaymentDetails.status == StatusEnum.SUCCESS)
             .limit(limit)
             .offset(skip)
             .all()

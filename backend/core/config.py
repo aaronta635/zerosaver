@@ -31,10 +31,8 @@ class Settings(BaseSettings):
     FORGET_PASSWORD_EXPIRY_TIME: int = 5
     STRIPE_PUBLISHABLE_KEY: str = ""
     STRIPE_SECRET_KEY: str = ""
-    MAIL_SECRET_KEY: str = ""
-    SWIFTBUY_MAIL: str = "swiftbuyx@gmail.com"
-    MAIL_PORT: int
-    SMTP_SERVER: str = "smtp.gmail.com"
+    POSTMARK_SERVER_TOKEN: str = ""
+    POSTMARK_FROM_EMAIL: str = ""
     paystack_config: PaystackConfig = PaystackConfig()
 
     class Config:

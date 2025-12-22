@@ -31,6 +31,7 @@ class Vendor(Base):
     bio = Column(String, nullable=False)
     profile_picture = Column(String, nullable=True)
     ratings = Column(Integer, nullable=True)
+    order_time = Column(String, nullable=True)
     created_timestamp = Column(TIMESTAMP(timezone=True), server_default=text("now()"))
     updated_timestamp = Column(DateTime, nullable=True)
 

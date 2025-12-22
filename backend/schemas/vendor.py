@@ -12,12 +12,28 @@ class VendorCreate(CreateBaseModel):
     bio: str
     profile_picture: Optional[AnyHttpUrl] = None
     ratings: Optional[int] = Field(ge=0, le=5)
+    order_time: Optional[str] = None
 
 
 class VendorReturn(CustomerVendorReturnBase):
     bio: str
     profile_picture: Optional[AnyHttpUrl] = None
     ratings: Optional[int] = None
+    order_time: Optional[str] = None
+
+
+class VendorUpdate(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    username: Optional[str] = None
+    phone_number: Optional[str] = None
+    country: Optional[str] = None
+    state: Optional[str] = None
+    address: Optional[str] = None
+    bio: Optional[str] = None
+    profile_picture: Optional[AnyHttpUrl] = None
+    ratings: Optional[int] = Field(default=None, ge=0, le=5)
+    order_time: Optional[str] = None
 
 
 class TotalSalesReturn(BaseModel):

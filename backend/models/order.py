@@ -27,6 +27,7 @@ class Order(Base):
         nullable=True,
     )
     total_amount = Column(Integer, nullable=False)
+    pickup_code = Column(String, nullable=True, unique=True)
     status = Column(String, default="processing")
     order_date = Column(TIMESTAMP(timezone=True), server_default=text("now()"))
     updated_timestamp = Column(TIMESTAMP(timezone=True), nullable=True)

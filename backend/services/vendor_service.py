@@ -4,7 +4,7 @@ from core.errors import InvalidRequest, ResourcesExist
 from crud import CRUDAuthUser, CRUDOtp, CRUDVendor
 from models.auth_user import AuthUser
 from schemas.base import RoleAuthDetailsUpdate, Roles
-from schemas import OTPCreate, OTPType, VendorCreate
+from schemas import OTPCreate, OTPType, VendorCreate, VendorUpdate
 
 
 class VendorService:
@@ -51,3 +51,34 @@ class VendorService:
             "send_email_otp", otp_data_obj, current_user.email
         )
         return vendor
+
+    async def update_vendor(
+        self,
+        data_obj: VendorUpdate,
+        current_user: AuthUser,
+    ):
+        if current_user.default_role != Roles.VENDOR:
+            raise InvalidRequest("Role must be Vendor to update vendor account")
+
+        vendor = self.crud_vendor.get_by_auth_id(current_user.id)
+        if not vendor:
+            raise InvalidRequest("Create vendor account first")
+
+        updated_vendor = await self.crud_vendor.update(id=vendor.id, data_obj=data_obj)
+
+        # keep auth details in sync when names/phone change
+        should_sync_auth = any(
+            [data_obj.first_name, data_obj.last_name, data_obj.phone_number]
+        )
+        if should_sync_auth:
+            vendor_auth_details = RoleAuthDetailsUpdate(
+                first_name=data_obj.first_name or vendor.first_name,
+                last_name=data_obj.last_name or vendor.last_name,
+                phone_number=data_obj.phone_number or vendor.phone_number,
+                role_id=vendor.id,
+            )
+            await self.queue_connection.enqueue_job(
+                "update_auth_details", current_user.id, vendor_auth_details
+            )
+
+        return updated_vendor
