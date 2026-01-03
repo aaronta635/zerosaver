@@ -32,7 +32,7 @@ def start_up_db():
     retry_delay = 5
     while retries < max_retries:
         try:
-            conn = psycopg2.connect(settings.SQLALCHEMY_DATABASE_URL)
+            conn = psycopg2.connect(settings.database_url)
             logger.info("Database Connection Successfull")
             return
         except Exception as error:
